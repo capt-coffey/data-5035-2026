@@ -22,7 +22,7 @@ The solution demonstrates three programming paradigms: **Imperative** (Python), 
 | `TOP4_SEGMENTS.csv` | The final 4 recommended pilot locations |
 | `README.md` | This file — project overview, instructions, and assumptions |
 | `REFLECTION.md` | Answers to assignment reflection questions |
-| `conversation_transcript.pdf` | Full AI-assisted development transcript |
+| `Week 7 AI Transcript.pdf` | Full AI-assisted development transcript |
 
 ---
 
@@ -43,17 +43,24 @@ This project runs entirely within a **Snowflake Notebook** environment. All sour
 
 ## Code Structure & Paradigm Breakdown
 
+While the assignment required at least two paradigms across four components, all three paradigms — Declarative, Imperative, and AI-Driven — ended up being used throughout the entire project rather than being cleanly isolated to specific components. In practice, the boundaries between paradigms blurred naturally as the solution evolved.
+
+### A Note on AI Use
+This project was developed with the assistance of Claude (Anthropic) as an AI reasoning partner. The full conversation transcript is included in the repository as `Week 7 AI Transcript.pdf` and documents how AI was used not just for code generation, but for architectural decisions, debugging, and scoring methodology throughout the project.
+
+---
+
 ### Cell 1 — Execution Context (SQL | Declarative)
 Sets the active database and schema so subsequent cells can reference tables without fully qualified names.
 
-### Cell 2 — Base DataFrame Construction (Python | Imperative & Declaritive)
+### Cell 2 — Base DataFrame Construction (Python | Imperative & Declarative)
 Loads four source tables (`ROAD_SEGMENTS`, `TRAFFIC_COUNTS`, `WEATHER_RISK`, `INCIDENTS`) from Snowflake into pandas DataFrames and merges them on `SEGMENT_ID`. Also derives a `CORRIDOR` label using `numpy.where` to classify each segment as either St. Louis ↔ Kansas City or St. Louis ↔ Chicago.
 
 This cell also embeds a SQL spatial query that calculates:
 - `dist_to_power_m` — distance in meters from each segment to the nearest power infrastructure point
 - `close_to_power` — boolean flag indicating whether a segment is within 10 miles of power infrastructure
 - `power_distance_ratio` — normalized 0–1 ratio of power distance relative to the furthest segment
-- `interchange_count` — count of interchanges within 10 miles of each segment (capped at 10)
+- `interchange_count` — count of interchanges within 10 miles of each segment
 
 The SQL within this cell uses Snowflake's native geospatial functions (`ST_DISTANCE`, `ST_DWITHIN`) which are a natural fit for declarative, set-based operations. Python was chosen for the surrounding orchestration because it allows procedural control over table loading, merging, and column normalization.
 
@@ -151,5 +158,5 @@ Prints the full scored segment list and top 4 selections as CSV-formatted output
 
 ---
 
-## Note on Final CSV Exports 
-I could not get the final CSV exports to work correctly (and I used a lot of different avenues). Ultimately, it seems like the files were "created" but not visibile on Snowflake OR Github. To ensure it was available for final submission I went ahead and copy / pasted the values into a file and manually uploaded to GitHub. 
+## Note on Final CSV Exports
+I could not get the final CSV exports to work correctly (and I used a lot of different avenues). Ultimately, it seems like the files were "created" but not visible on Snowflake OR GitHub. To ensure it was available for final submission I went ahead and copy/pasted the values into a file and manually uploaded to GitHub.
